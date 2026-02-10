@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Move Well | Smart Physiotherapy Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#22c55e;
+  --green-dark:#16a34a;
+  --bg:#041f17;
+  --glass:rgba(255,255,255,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+body{background:var(--bg);color:#fff;overflow-x:hidden}
+
+/* ===== INTRO CINEMATIC ===== */
+#intro{
+  position:fixed;inset:0;z-index:9999;
+  background:radial-gradient(circle at top,#34d399,#041f17 70%);
+  display:flex;justify-content:center;align-items:center;
+}
+#intro canvas{position:absolute;inset:0}
+#intro h1{
+  font-size:5rem;font-weight:900;letter-spacing:8px;
+  text-shadow:0 0 40px rgba(34,197,94,.9);
+  animation:logoPop 2.5s ease forwards;
+}
+@keyframes logoPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+
+/* ===== SITE ===== */
+#site{display:none}
+nav{
+  position:sticky;top:0;z-index:50;
+  background:linear-gradient(135deg,#ffffff,#ecfdf5);
+  padding:18px 8%;
+  display:flex;justify-content:space-between;align-items:center;
+  box-shadow:0 12px 30px rgba(0,0,0,.18)
+}
+.logo{font-size:2rem;font-weight:900;color:var(--green)}
+
+header{
+  padding:170px 8% 150px;
+  background:
+    linear-gradient(135deg,rgba(22,163,74,.85),rgba(5,46,35,.9)),
+    url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
+  background-size:cover;
+  background-position:center;
+  text-align:center;
+}
+header h2{font-size:4.2rem;font-weight:900;margin-bottom:22px;text-shadow:0 6px 30px rgba(0,0,0,.45)}
+header p{font-size:1.15rem;max-width:900px;margin:auto;opacity:.95}
+
+section{padding:120px 8%}
+h3{text-align:center;font-size:2.9rem;font-weight:800;margin-bottom:70px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:38px}
+
+.card{
+  background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));
+  border-radius:30px;
+  padding:34px;
+  backdrop-filter:blur(18px);
+  box-shadow:0 25px 50px rgba(0,0,0,.45);
+  transition:.45s ease;
+}
+.card:hover{transform:translateY(-18px) scale(1.02)}
+.card img{width:100%;border-radius:20px;margin-bottom:16px}
+.card h4{font-size:1.25rem;margin-bottom:6px}
+
+input,button{
+  width:100%;padding:16px;border-radius:18px;border:none;margin-top:14px;font-size:1rem
+}
+button{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;font-weight:800;cursor:pointer
+}
+
+iframe{width:100%;height:230px;border:none;border-radius:20px;margin-top:12px}
+
+footer{
+  padding:50px;text-align:center;
+  background:#03130e;color:#bbf7d0
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+  <canvas id="particles"></canvas>
+  <h1>MOVE&nbsp;WELL</h1>
+</div>
+
+<!-- SITE -->
+<div id="site">
+<nav>
+  <div class="logo">Move Well</div>
+  <div style="display:flex;gap:28px;align-items:center">
+    <a href="#" style="text-decoration:none;font-weight:600;color:#065f46">Home</a>
+    <a href="#" style="text-decoration:none;font-weight:600;color:#065f46">BMI</a>
+    <a href="#" style="text-decoration:none;font-weight:600;color:#065f46">Pain Relief</a>
+    <a href="#" style="text-decoration:none;font-weight:600;color:#065f46">Exercises</a>
+    <button style="padding:10px 18px;border-radius:20px;border:none;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;font-weight:700">Get Started</button>
+  </div>
+</nav>
+
+<header>
+<h2>Smart Full‑Body Physiotherapy</h2>
+<p>At‑home recovery platform combining BMI analysis, lifestyle guidance and pain‑specific physiotherapy programs.</p>
+</header>
+
+<section>
+<h3>Body Health & BMI</h3>
+<div class="grid">
+<div class="card">
+<input id="height" placeholder="Height (cm)">
+<input id="weight" placeholder="Weight (kg)">
+<button onclick="calcBMI()">Analyze Health</button>
+<div id="bmiOut"></div>
+</div>
+</div>
+</section>
+
+<section>
+<h3>Select Pain Area</h3>
+<div id="painGrid" class="grid"></div>
+</section>
+
+<section id="exerciseSection">
+<h3 id="exerciseTitle"></h3>
+<div id="exerciseGrid" class="grid"></div>
+</section>
+
+<footer>© Move Well | Educational Physiotherapy Assistant</footer>
+</div>
+
+<script>
+/* ===== PARTICLES INTRO ===== */
+const c=document.getElementById('particles'),ctx=c.getContext('2d');
+function resize(){c.width=innerWidth;c.height=innerHeight}resize();addEventListener('resize',resize);
+let parts=[...Array(120)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+1,s:Math.random()*1.5+0.5}));
+(function anim(){ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='rgba(134,239,172,.9)';parts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();p.y+=p.s;if(p.y>c.height)p.y=0});requestAnimationFrame(anim)})();
+setTimeout(()=>{intro.style.display='none';site.style.display='block'},3500);
+
+/* ===== DATA ===== */
+const DATA=[
+{a:'Neck',i:'https://images.unsplash.com/photo-1584467735871-bdcb41c07b7a',v:['0oF2kM8sJgA','2pLT-olgUJs','5b3J4cG0m9I','qHQ_E-f5278']},
+{a:'Shoulder',i:'https://images.unsplash.com/photo-1606206873764-fd15d1f0a45b',v:['2ZpHkPz8JwY','Vq9C0A2RZTk','lhRr5ZtKJwU','2pLT-olgUJs']},
+{a:'Upper Back',i:'https://images.unsplash.com/photo-1600959907703-125ba1374a12',v:['kqnua4rHVVA','CO3racIlTcg','9SKuFe2SERs','m2Zx-57cSok']},
+{a:'Lower Back',i:'https://images.unsplash.com/photo-1518611012118-f0c5d70fe6f9',v:['CO3racIlTcg','kqnua4rHVVA','9SKuFe2SERs','m2Zx-57cSok']},
+{a:'Hip',i:'https://images.unsplash.com/photo-1599058917212-d750089bc07d',v:['7JzvC3f0V0A','m2Zx-57cSok','0G7nJY3cS0g','4Z0JYh0m5tI']},
+{a:'Knee',i:'https://images.unsplash.com/photo-1518611012118-f0c5d70fe6f9',v:['Zr3aK7zUL9E','8BcPHWGQO44','dYxZt6nU4lY','QZrDHO3YlEc']},
+{a:'Ankle',i:'https://images.unsplash.com/photo-1599058917212-d750089bc07d',v:['QZrDHO3YlEc','dYxZt6nU4lY','8BcPHWGQO44','Zr3aK7zUL9E']},
+{a:'Foot',i:'https://images.unsplash.com/photo-1518611012118-f0c5d70fe6f9',v:['QZrDHO3YlEc','dYxZt6nU4lY','8BcPHWGQO44','Zr3aK7zUL9E']}
+];
+
+const painGrid=document.getElementById('painGrid'),exGrid=document.getElementById('exerciseGrid'),exTitle=document.getElementById('exerciseTitle');
+DATA.forEach(p=>{
+ const c=document.createElement('div');c.className='card';
+ c.innerHTML=`<img src="${p.i}"><h4>${p.a}</h4>`;
+ c.onclick=()=>{exTitle.innerText=p.a+' Recovery Exercises';exGrid.innerHTML='';p.v.forEach(x=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<iframe src="https://www.youtube.com/embed/${x}" allowfullscreen></iframe>`;exGrid.appendChild(d)});exerciseSection.scrollIntoView({behavior:'smooth'})};
+ painGrid.appendChild(c);
+});
+
+function calcBMI(){
+ const h=height.value/100,w=weight.value;
+ const b=(w/(h*h)).toFixed(1);
+ bmiOut.innerHTML=`<h4>BMI ${b}</h4><p>${b<18.5?'Underweight – nutrition & strength focus':b<25?'Healthy – maintain routine':'Overweight – mobility & fat‑loss focus'}</p>`
+}
+</script>
+</body>
+</html>
